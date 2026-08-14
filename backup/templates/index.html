@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Marimonia - Catálogo artesanal</title>
+
+
+<style>
+
+body {
+
+    font-family: Arial, sans-serif;
+    background:#f5f1eb;
+    margin:0;
+
+}
+
+
+header {
+
+    background:#6b4f3a;
+    color:white;
+    text-align:center;
+    padding:35px;
+
+}
+
+
+header h1 {
+
+    margin:0;
+    font-size:40px;
+
+}
+
+
+header p {
+
+    font-size:18px;
+
+}
+
+
+h2 {
+
+    text-align:center;
+    color:#6b4f3a;
+    margin-top:35px;
+
+}
+
+
+
+.contenedor {
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+    padding:20px;
+
+}
+
+
+
+.card {
+
+    background:white;
+    width:240px;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 3px 10px #bbb;
+
+}
+
+
+
+.card:hover {
+
+    transform:scale(1.05);
+
+}
+
+
+
+.card img {
+
+    width:200px;
+    height:200px;
+    object-fit:cover;
+    border-radius:10px;
+
+}
+
+
+
+.categoria {
+
+    background:#8b6f55;
+    color:white;
+
+}
+
+
+
+.producto h3 {
+
+    color:#6b4f3a;
+
+}
+
+
+.descripcion {
+
+    color:#555;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>Marimonia</h1>
+
+<p>Catálogo artesanal</p>
+
+</header>
+
+
+
+<h2>Categorías</h2>
+
+
+<div class="contenedor">
+
+
+{% for categoria in categorias %}
+
+<div class="card categoria">
+
+<a href="/categoria/{{ categoria.nombre }}">
+<h3>
+{{ categoria.nombre }}
+</h3>
+</a>
+
+
+{% endfor %}
+
+
+</div>
+
+
+
+
+<h2>Productos</h2>
+
+
+<div class="contenedor">
+
+
+{% for producto in productos %}
+
+
+<div class="card producto">
+
+
+<img src="/static/images/{{ producto.imagen }}" alt="{{ producto.nombre }}">
+
+
+<h3>
+{{ producto.nombre }}
+</h3>
+
+
+<p class="descripcion">
+
+{{ producto.descripcion }}
+
+</p>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+
+</body>
+
+</html>

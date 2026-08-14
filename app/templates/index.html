@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+
+
+{% block titulo %}
+Marimonia - Catálogo artesanal
+{% endblock %}
+
+
+
+{% block contenido %}
+
+
+
+<section class="presentacion">
+
+
+
+    <h2>
+        Todo hecho a mano
+    </h2>
+
+
+    <p>
+        Piezas únicas creadas con amor y dedicación.
+    </p>
+
+
+    <p>
+        Cerámica, velas, sahumerios y objetos decorativos
+        para transformar tus espacios.
+    </p>
+
+
+</section>
+
+
+
+
+<h2 class="titulo">
+Nuestros productos
+</h2>
+
+
+
+<div class="categorias">
+
+
+{% for categoria in categorias %}
+
+
+
+<a href="{{ url_for('main.categoria', nombre=categoria.nombre) }}"
+   class="card categoria-card">
+
+
+
+{% if categoria.imagen %}
+
+
+<img src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}"
+     alt="{{ categoria.nombre }}">
+
+
+{% endif %}
+
+
+
+<h3>
+
+{{ categoria.nombre }}
+
+</h3>
+
+
+
+</a>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+<section class="redes">
+
+
+<h2>
+Contacto
+</h2>
+
+
+<p>
+📞 Teléfono / WhatsApp
+</p>
+
+
+<a href="tel:+549XXXXXXXXXX">
+
++54 9 3446 600422
+
+</a>
+
+
+<p>
+📷 Seguinos en Instagram
+</p>
+
+
+<a href="https://www.instagram.com/marimonia.hechoamano"
+   target="_blank">
+
+@marimonia.hechoamano
+
+</a>
+
+
+</section>
+
+
+
+
+{% endblock %}

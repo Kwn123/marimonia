@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Administración Marimonia</title>
+
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f5f1eb;
+    padding:30px;
+}
+
+
+h1,h2{
+    color:#6b4f3a;
+}
+
+
+form{
+
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    width:450px;
+    box-shadow:0 2px 8px #bbb;
+
+}
+
+
+input,textarea,select{
+
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    box-sizing:border-box;
+
+}
+
+
+button{
+
+    background:#6b4f3a;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#533b2b;
+
+}
+
+
+.item{
+
+    display:flex;
+    align-items:center;
+    gap:20px;
+
+    background:white;
+    margin:20px 0;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 8px #bbb;
+
+}
+
+
+.item img{
+
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:10px;
+
+}
+
+
+.info{
+
+    flex:1;
+
+}
+
+
+.acciones{
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+}
+
+
+.boton{
+
+    text-decoration:none;
+    color:white;
+    padding:10px 15px;
+    border-radius:8px;
+    text-align:center;
+    font-weight:bold;
+
+}
+
+
+.editar{
+
+    background:#0d6efd;
+
+}
+
+
+.eliminar{
+
+    background:#dc3545;
+
+}
+
+
+hr{
+
+    margin:40px 0;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>Administración Marimonia</h1>
+
+
+
+<!-- ======================
+     PRODUCTOS
+======================= -->
+
+
+<h2>Agregar producto</h2>
+
+
+<form action="{{ url_for('main.agregar_producto') }}"
+method="POST"
+enctype="multipart/form-data">
+
+
+<input
+type="text"
+name="nombre"
+placeholder="Nombre del producto"
+required>
+
+
+<textarea
+name="descripcion"
+placeholder="Descripción">
+</textarea>
+
+
+<select name="categoria">
+
+
+{% for categoria in categorias %}
+
+<option value="{{ categoria.id }}">
+
+{{ categoria.nombre }}
+
+</option>
+
+{% endfor %}
+
+
+</select>
+
+
+<input
+type="file"
+name="imagen">
+
+
+<button>
+
+Guardar producto
+
+</button>
+
+
+</form>
+
+
+
+<hr>
+
+
+
+<h2>Productos cargados</h2>
+
+
+
+{% for producto in productos %}
+
+
+<div class="item">
+
+
+<img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}">
+
+
+
+<div class="info">
+
+
+<h3>
+
+{{ producto.nombre }}
+
+</h3>
+
+
+<p>
+
+{{ producto.descripcion }}
+
+</p>
+
+
+<p>
+
+<strong>Categoría:</strong>
+
+{{ producto.categoria.nombre }}
+
+</p>
+
+
+</div>
+
+
+
+<div class="acciones">
+
+
+<a class="boton editar"
+href="{{ url_for('main.editar_producto', id=producto.id) }}">
+
+✏️ Editar
+
+</a>
+
+
+<a class="boton eliminar"
+href="{{ url_for('main.eliminar_producto', id=producto.id) }}"
+onclick="return confirm('¿Eliminar producto?');">
+
+🗑 Eliminar
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+
+
+
+<!-- ======================
+     CATEGORIAS
+======================= -->
+
+
+<hr>
+
+
+
+<h2>Agregar categoría</h2>
+
+
+<form action="{{ url_for('main.agregar_categoria') }}"
+method="POST"
+enctype="multipart/form-data">
+
+
+<input
+type="text"
+name="nombre"
+placeholder="Nombre categoría"
+required>
+
+
+<input
+type="file"
+name="imagen">
+
+
+<button>
+
+Guardar categoría
+
+</button>
+
+
+</form>
+
+
+
+
+<hr>
+
+
+
+<h2>Categorías cargadas</h2>
+
+
+
+{% for categoria in categorias %}
+
+
+<div class="item">
+
+
+
+{% if categoria.imagen %}
+
+
+<img src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}">
+
+
+{% endif %}
+
+
+
+
+<div class="info">
+
+
+<h3>
+
+{{ categoria.nombre }}
+
+</h3>
+
+
+<p>
+
+Productos asociados:
+{{ categoria.productos|length }}
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="acciones">
+
+
+<a class="boton editar"
+href="{{ url_for('main.editar_categoria', id=categoria.id) }}">
+
+✏️ Editar
+
+</a>
+
+
+
+<a class="boton eliminar"
+href="{{ url_for('main.eliminar_categoria', id=categoria.id) }}"
+onclick="return confirm('¿Eliminar categoría?');">
+
+🗑 Eliminar
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% endfor %}
+
+<hr>
+
+<h2>Cambiar contraseña</h2>
+
+<form action="{{ url_for('main.cambiar_password') }}"
+method="POST">
+
+
+<input
+type="password"
+name="password_actual"
+placeholder="Contraseña actual"
+required>
+
+
+<input
+type="password"
+name="password_nueva"
+placeholder="Nueva contraseña"
+required>
+
+
+<input
+type="password"
+name="password_confirmar"
+placeholder="Repetir nueva contraseña"
+required>
+
+
+<button>
+
+Cambiar contraseña
+
+</button>
+
+
+</form>
+
+</body>
+
+</html>

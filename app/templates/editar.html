@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block titulo %}
+Editar producto
+{% endblock %}
+
+{% block contenido %}
+
+<h2>Editar producto</h2>
+
+<form method="POST"
+      action="{{ url_for('main.guardar_producto', id=producto.id) }}"
+      enctype="multipart/form-data">
+
+    <label>Nombre</label>
+
+    <input
+        type="text"
+        name="nombre"
+        value="{{ producto.nombre }}"
+        required>
+
+    <label>Descripción</label>
+
+    <textarea
+        name="descripcion"
+        rows="5">{{ producto.descripcion }}</textarea>
+
+    <label>Categoría</label>
+
+    <select name="categoria">
+
+        {% for categoria in categorias %}
+
+        <option
+            value="{{ categoria.id }}"
+            {% if categoria.id == producto.categoria_id %}
+            selected
+            {% endif %}>
+
+            {{ categoria.nombre }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+    <p><strong>Imagen actual</strong></p>
+
+    {% if producto.imagen %}
+
+    <img
+        src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}"
+        width="180"
+        style="border-radius:10px; margin-bottom:20px;">
+
+    {% endif %}
+
+    <label>Nueva imagen (opcional)</label>
+
+    <input
+        type="file"
+        name="imagen">
+
+    <br><br>
+
+    <button type="submit">
+        💾 Guardar cambios
+    </button>
+
+    <a href="{{ url_for('main.admin') }}"
+       style="margin-left:20px;">
+        Cancelar
+    </a>
+
+</form>
+
+{% endblock %}

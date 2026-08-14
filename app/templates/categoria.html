@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+
+{% block titulo %}
+{{ categoria.nombre }} - Marimonia
+{% endblock %}
+
+
+{% block contenido %}
+
+
+<h2 class="titulo">
+Marimonia - {{ categoria.nombre }}
+</h2>
+
+
+
+<div class="productos">
+
+
+{% for producto in productos %}
+
+
+<div class="card">
+
+
+{% if producto.imagen %}
+
+<img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}">
+
+{% endif %}
+
+
+
+<h3>
+{{ producto.nombre }}
+</h3>
+
+
+<p>
+{{ producto.descripcion }}
+</p>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+
+<div style="text-align:center;">
+
+<a href="/" class="boton-volver">
+← Volver al inicio
+</a>
+
+</div>
+
+
+
+{% endblock %}

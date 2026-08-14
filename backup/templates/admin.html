@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Administración Marimonia</title>
+
+
+<style>
+
+body {
+
+    font-family: Arial;
+    background:#f5f1eb;
+    padding:30px;
+
+}
+
+
+h1,h2 {
+
+    color:#6b4f3a;
+
+}
+
+
+form {
+
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    width:400px;
+
+}
+
+
+input, textarea, select {
+
+    width:100%;
+    margin-bottom:15px;
+    padding:10px;
+
+}
+
+
+button {
+
+    background:#6b4f3a;
+    color:white;
+    padding:10px 20px;
+    border:0;
+    border-radius:8px;
+
+}
+
+
+.producto {
+
+    background:white;
+    margin:15px 0;
+    padding:15px;
+    border-radius:15px;
+
+}
+
+
+.producto img {
+
+    width:100px;
+    height:100px;
+    object-fit:cover;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>Marimonia - Administración</h1>
+
+
+<h2>Agregar producto</h2>
+
+
+<form action="/admin/producto" method="POST" enctype="multipart/form-data">
+
+
+<input 
+type="text" 
+name="nombre"
+placeholder="Nombre del producto"
+required>
+
+
+<textarea 
+name="descripcion"
+placeholder="Descripción">
+</textarea>
+
+
+<select name="categoria">
+
+{% for categoria in categorias %}
+
+<option value="{{ categoria.id }}">
+{{ categoria.nombre }}
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<input type="file" name="imagen">
+
+
+<button type="submit">
+Guardar producto
+</button>
+
+
+</form>
+
+
+
+<h2>Productos cargados</h2>
+
+
+{% for producto in productos %}
+
+
+<div class="producto">
+
+
+<img src="/static/images/{{ producto.imagen }}">
+
+
+<h3>
+{{ producto.nombre }}
+</h3>
+
+
+<p>
+{{ producto.descripcion }}
+</p>
+
+
+<p>
+Categoría:
+{{ producto.categoria.nombre }}
+</p>
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+</body>
+
+</html>

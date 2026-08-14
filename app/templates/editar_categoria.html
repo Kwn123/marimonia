@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Editar categoría</title>
+
+</head>
+
+
+<body>
+
+
+<h1>Editar categoría</h1>
+
+
+<form action="{{ url_for('main.guardar_categoria', id=categoria.id) }}"
+method="POST"
+enctype="multipart/form-data">
+
+
+<input
+type="text"
+name="nombre"
+value="{{ categoria.nombre }}"
+required>
+
+
+<br><br>
+
+
+<img 
+src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}"
+width="150">
+
+
+<br><br>
+
+
+<input type="file" name="imagen">
+
+
+<br><br>
+
+
+<button type="submit">
+Guardar
+</button>
+
+
+</form>
+
+
+<br>
+
+
+<a href="/admin">
+Volver
+</a>
+
+
+</body>
+
+</html>

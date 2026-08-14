@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>{{ categoria.nombre }} - Marimonia</title>
+
+
+<style>
+
+body {
+    font-family: Arial;
+    background:#f5f1eb;
+}
+
+
+h1 {
+    text-align:center;
+    color:#6b4f3a;
+}
+
+
+.contenedor {
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+
+}
+
+
+.card {
+
+    background:white;
+    width:240px;
+    padding:20px;
+    text-align:center;
+    border-radius:15px;
+    box-shadow:0 3px 10px #bbb;
+
+}
+
+
+.card img {
+
+    width:200px;
+    height:200px;
+    object-fit:cover;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>
+Marimonia - {{ categoria.nombre }}
+</h1>
+
+
+<div class="contenedor">
+
+
+{% for producto in productos %}
+
+
+<div class="card">
+
+
+<img src="/static/images/{{ producto.imagen }}">
+
+
+<h3>
+{{ producto.nombre }}
+</h3>
+
+
+<p>
+{{ producto.descripcion }}
+</p>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</body>
+
+</html>

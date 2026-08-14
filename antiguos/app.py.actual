@@ -1,0 +1,82 @@
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+
+app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///catalogo.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+
+class Categoria(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), unique=True, nullable=False)
+
+    productos = db.relationship(
+        "Producto",
+        backref="categoria",
+        lazy=True
+    )
+
+
+class Producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.Text)
+    imagen = db.Column(db.String(200))
+
+    categoria_id = db.Column(
+        db.Integer,
+        db.ForeignKey("categoria.id"),
+        nullable=False
+    )
+
+
+@app.route("/admin")
+def inicio():
+
+    categorias = Categoria.query.all()
+    productos = Producto.query.all()
+
+    return render_template(
+        "admin.html",
+        categorias=categorias,
+        productos=productos
+    )
+
+
+def crear_base():
+
+    db.create_all()
+
+    if Categoria.query.count() == 0:
+
+        categorias = [
+            "Cerámica",
+            "Velas",
+            "Cemento",
+            "Sahumerios",
+            "Porta sahumerios",
+            "Esencias"
+        ]
+
+        for nombre in categorias:
+            db.session.add(
+                Categoria(nombre=nombre)
+            )
+
+        db.session.commit()
+
+
+if __name__ == "__main__":
+
+    with app.app_context():
+        crear_base()
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )

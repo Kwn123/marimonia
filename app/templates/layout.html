@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+{% block titulo %}
+Marimonia
+{% endblock %}
+</title>
+
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<img src="{{ url_for('static', filename='images/logo.png') }}"
+     class="logo-header"
+     alt="Marimonia">
+
+<p>
+Hecho a mano
+</p>
+
+</header>
+
+
+<nav>
+
+<a href="/">Inicio</a>
+
+</nav>
+
+
+
+<div class="contenedor">
+
+{% block contenido %}
+
+{% endblock %}
+
+</div>
+
+
+
+<footer>
+
+<p>© Marimonia</p>
+
+</footer>
+
+
+</body>
+
+</html>
