@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./instance:/app/instance
+      - ./app/static/images:/app/app/static/images
+    restart: unless-stopped

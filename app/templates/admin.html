@@ -2,450 +2,355 @@
 <html lang="es">
 
 <head>
-
-<meta charset="UTF-8">
-
-<title>Administración Marimonia</title>
-
-
-<style>
-
-body{
-    font-family:Arial;
-    background:#f5f1eb;
-    padding:30px;
-}
-
-
-h1,h2{
-    color:#6b4f3a;
-}
-
-
-form{
-
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    width:450px;
-    box-shadow:0 2px 8px #bbb;
-
-}
-
-
-input,textarea,select{
-
-    width:100%;
-    padding:10px;
-    margin-bottom:15px;
-    box-sizing:border-box;
-
-}
-
-
-button{
-
-    background:#6b4f3a;
-    color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:8px;
-    cursor:pointer;
-
-}
-
-
-button:hover{
-
-    background:#533b2b;
-
-}
-
-
-.item{
-
-    display:flex;
-    align-items:center;
-    gap:20px;
-
-    background:white;
-    margin:20px 0;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 2px 8px #bbb;
-
-}
-
-
-.item img{
-
-    width:120px;
-    height:120px;
-    object-fit:cover;
-    border-radius:10px;
-
-}
-
-
-.info{
-
-    flex:1;
-
-}
-
-
-.acciones{
-
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-
-}
-
-
-.boton{
-
-    text-decoration:none;
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
-    text-align:center;
-    font-weight:bold;
-
-}
-
-
-.editar{
-
-    background:#0d6efd;
-
-}
-
-
-.eliminar{
-
-    background:#dc3545;
-
-}
-
-
-hr{
-
-    margin:40px 0;
-
-}
-
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - Marimonia</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-topbar {
+            background: var(--color-primary-dark);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .admin-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .admin-topbar-left .logo-admin {
+            height: 36px;
+            padding: 10px 0;
+        }
+        .admin-tabs {
+            display: flex;
+            gap: 0;
+        }
+        .admin-tabs a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            padding: 14px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .admin-tabs a:hover {
+            color: rgba(255,255,255,0.8);
+        }
+        .admin-tabs a.active {
+            color: white;
+            border-bottom-color: var(--color-accent);
+        }
+        .admin-topbar-right {
+            display: flex;
+            gap: 12px;
+        }
+        .admin-topbar-right a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        .admin-topbar-right a:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        .admin-body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .panel {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .panel h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .form-grid .form-group:last-child {
+            grid-column: 1 / -1;
+        }
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .list-table colgroup .col-img { width: 56px; }
+        .list-table colgroup .col-nom { width: auto; }
+        .list-table colgroup .col-cat { width: 120px; }
+        .list-table colgroup .col-acc { width: 160px; }
+        .list-table th {
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--color-border);
+        }
+        .list-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .list-table tr:last-child td {
+            border-bottom: none;
+        }
+        .list-table .thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .list-table .actions {
+            white-space: nowrap;
+        }
+        .list-table .actions a {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        .btn-blue {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+        .btn-red {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+        .btn-blue:hover {
+            background: #1D4ED8;
+            color: white;
+        }
+        .btn-red:hover {
+            background: #DC2626;
+            color: white;
+        }
+        .tag-cat {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(139,94,60,0.08);
+            color: var(--color-primary);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 
 <body>
 
-
-<h1>Administración Marimonia</h1>
-
-
-
-<!-- ======================
-     PRODUCTOS
-======================= -->
-
-
-<h2>Agregar producto</h2>
-
-
-<form action="{{ url_for('main.agregar_producto') }}"
-method="POST"
-enctype="multipart/form-data">
-
-
-<input
-type="text"
-name="nombre"
-placeholder="Nombre del producto"
-required>
-
-
-<textarea
-name="descripcion"
-placeholder="Descripción">
-</textarea>
-
-
-<select name="categoria">
-
-
-{% for categoria in categorias %}
-
-<option value="{{ categoria.id }}">
-
-{{ categoria.nombre }}
-
-</option>
-
-{% endfor %}
-
-
-</select>
-
-
-<input
-type="file"
-name="imagen">
-
-
-<button>
-
-Guardar producto
-
-</button>
-
-
-</form>
-
-
-
-<hr>
-
-
-
-<h2>Productos cargados</h2>
-
-
-
-{% for producto in productos %}
-
-
-<div class="item">
-
-
-<img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}">
-
-
-
-<div class="info">
-
-
-<h3>
-
-{{ producto.nombre }}
-
-</h3>
-
-
-<p>
-
-{{ producto.descripcion }}
-
-</p>
-
-
-<p>
-
-<strong>Categoría:</strong>
-
-{{ producto.categoria.nombre }}
-
-</p>
-
-
-</div>
-
-
-
-<div class="acciones">
-
-
-<a class="boton editar"
-href="{{ url_for('main.editar_producto', id=producto.id) }}">
-
-✏️ Editar
-
-</a>
-
-
-<a class="boton eliminar"
-href="{{ url_for('main.eliminar_producto', id=producto.id) }}"
-onclick="return confirm('¿Eliminar producto?');">
-
-🗑 Eliminar
-
-</a>
-
-
-</div>
-
-
-</div>
-
-
-{% endfor %}
-
-
-
-
-
-
-<!-- ======================
-     CATEGORIAS
-======================= -->
-
-
-<hr>
-
-
-
-<h2>Agregar categoría</h2>
-
-
-<form action="{{ url_for('main.agregar_categoria') }}"
-method="POST"
-enctype="multipart/form-data">
-
-
-<input
-type="text"
-name="nombre"
-placeholder="Nombre categoría"
-required>
-
-
-<input
-type="file"
-name="imagen">
-
-
-<button>
-
-Guardar categoría
-
-</button>
-
-
-</form>
-
-
-
-
-<hr>
-
-
-
-<h2>Categorías cargadas</h2>
-
-
-
-{% for categoria in categorias %}
-
-
-<div class="item">
-
-
-
-{% if categoria.imagen %}
-
-
-<img src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}">
-
-
-{% endif %}
-
-
-
-
-<div class="info">
-
-
-<h3>
-
-{{ categoria.nombre }}
-
-</h3>
-
-
-<p>
-
-Productos asociados:
-{{ categoria.productos|length }}
-
-</p>
-
-
-</div>
-
-
-
-
-<div class="acciones">
-
-
-<a class="boton editar"
-href="{{ url_for('main.editar_categoria', id=categoria.id) }}">
-
-✏️ Editar
-
-</a>
-
-
-
-<a class="boton eliminar"
-href="{{ url_for('main.eliminar_categoria', id=categoria.id) }}"
-onclick="return confirm('¿Eliminar categoría?');">
-
-🗑 Eliminar
-
-</a>
-
-
-</div>
-
-
-
-</div>
-
-
-
-{% endfor %}
-
-<hr>
-
-<h2>Cambiar contraseña</h2>
-
-<form action="{{ url_for('main.cambiar_password') }}"
-method="POST">
-
-
-<input
-type="password"
-name="password_actual"
-placeholder="Contraseña actual"
-required>
-
-
-<input
-type="password"
-name="password_nueva"
-placeholder="Nueva contraseña"
-required>
-
-
-<input
-type="password"
-name="password_confirmar"
-placeholder="Repetir nueva contraseña"
-required>
-
-
-<button>
-
-Cambiar contraseña
-
-</button>
-
-
-</form>
+    <div class="admin-topbar">
+        <div class="admin-topbar-left">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo-admin" alt="Marimonia">
+            </a>
+            <div class="admin-tabs">
+                <a href="#sec-productos" class="active" onclick="showTab('sec-productos', this)">Productos</a>
+                <a href="#sec-categorias" onclick="showTab('sec-categorias', this)">Categorías</a>
+                <a href="#seguridad" onclick="showTab('seguridad', this)">Seguridad</a>
+            </div>
+        </div>
+        <div class="admin-topbar-right">
+            <a href="/">Tienda</a>
+            <a href="/logout">Salir</a>
+        </div>
+    </div>
+
+    <div class="admin-body">
+
+        <!-- PRODUCTOS -->
+        <div id="sec-productos">
+            <div class="panel">
+                <h3>Agregar producto</h3>
+                <form action="{{ url_for('main.agregar_producto') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select name="categoria">
+                                {% for c in categorias %}
+                                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea name="descripcion" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Imagen</label>
+                            <input type="file" name="imagen">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:12px;">Guardar</button>
+                </form>
+            </div>
+
+            <div class="panel" style="padding:0; overflow:hidden;">
+                <table class="list-table">
+                    <colgroup>
+                        <col class="col-img">
+                        <col class="col-nom">
+                        <col class="col-cat">
+                        <col class="col-acc">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos %}
+                        <tr>
+                            <td>{% if p.imagen %}<img class="thumb" src="{{ url_for('static', filename='images/productos/' + p.imagen) }}">{% endif %}</td>
+                            <td><strong>{{ p.nombre }}</strong><br><span style="font-size:12px;color:var(--color-text-muted);">{{ p.descripcion[:50] }}</span></td>
+                            <td><span class="tag-cat">{{ p.categoria.nombre }}</span></td>
+                            <td class="actions">
+                                <a class="btn-blue" href="{{ url_for('main.editar_producto', id=p.id) }}">Editar</a>
+                                <a class="btn-red" href="{{ url_for('main.eliminar_producto', id=p.id) }}" onclick="return confirm('¿Eliminar?')">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if not productos %}
+                <div class="empty">No hay productos.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CATEGORÍAS -->
+        <div id="sec-categorias" style="display:none;">
+            <div class="panel">
+                <h3>Agregar categoría</h3>
+                <form action="{{ url_for('main.agregar_categoria') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Imagen</label>
+                            <input type="file" name="imagen">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:12px;">Guardar</button>
+                </form>
+            </div>
+
+            <div class="panel" style="padding:0; overflow:hidden;">
+                <table class="list-table">
+                    <colgroup>
+                        <col class="col-img">
+                        <col class="col-nom">
+                        <col style="width:100px;">
+                        <col class="col-acc">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nombre</th>
+                            <th>Productos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in categorias %}
+                        <tr>
+                            <td>{% if c.imagen %}<img class="thumb" src="{{ url_for('static', filename='images/categorias/' + c.imagen) }}">{% endif %}</td>
+                            <td><strong>{{ c.nombre }}</strong></td>
+                            <td>{{ c.productos|length }}</td>
+                            <td class="actions">
+                                <a class="btn-blue" href="{{ url_for('main.editar_categoria', id=c.id) }}">Editar</a>
+                                <a class="btn-red" href="{{ url_for('main.eliminar_categoria', id=c.id) }}" onclick="return confirm('¿Eliminar?')">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if not categorias %}
+                <div class="empty">No hay categorías.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- SEGURIDAD -->
+        <div id="seguridad" style="display:none;">
+            <div class="panel" style="max-width:400px;">
+                <h3>Cambiar contraseña</h3>
+                <form action="{{ url_for('main.cambiar_password') }}" method="POST">
+                    <div class="form-group">
+                        <label>Contraseña actual</label>
+                        <input type="password" name="password_actual" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva contraseña</label>
+                        <input type="password" name="password_nueva" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar</label>
+                        <input type="password" name="password_confirmar" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:12px;">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(id, el) {
+            document.querySelectorAll('.admin-body > div').forEach(function(d) {
+                d.style.display = 'none';
+            });
+            document.getElementById(id).style.display = '';
+            document.querySelectorAll('.admin-tabs a').forEach(function(a) {
+                a.classList.remove('active');
+            });
+            el.classList.add('active');
+        }
+    </script>
 
 </body>
 

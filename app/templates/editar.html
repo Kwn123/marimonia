@@ -1,79 +1,58 @@
 {% extends "layout.html" %}
 
-{% block titulo %}
-Editar producto
-{% endblock %}
+{% block titulo %}Editar producto - Marimonia{% endblock %}
 
 {% block contenido %}
 
-<h2>Editar producto</h2>
+<div class="editar-layout">
+    <div class="editar-header">
+        <h2>Editar producto</h2>
+        <p>Modificá los datos del producto</p>
+    </div>
 
-<form method="POST"
-      action="{{ url_for('main.guardar_producto', id=producto.id) }}"
-      enctype="multipart/form-data">
+    <div class="editar-form">
+        <form method="POST" action="{{ url_for('main.guardar_producto', id=producto.id) }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="{{ producto.nombre }}" required>
+            </div>
 
-    <label>Nombre</label>
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea name="descripcion" rows="5">{{ producto.descripcion }}</textarea>
+            </div>
 
-    <input
-        type="text"
-        name="nombre"
-        value="{{ producto.nombre }}"
-        required>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select name="categoria">
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria.id == producto.categoria_id %}selected{% endif %}>
+                        {{ categoria.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label>Descripción</label>
+            {% if producto.imagen %}
+            <div class="form-group">
+                <label>Imagen actual</label>
+                <div class="current-image">
+                    <img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+                </div>
+            </div>
+            {% endif %}
 
-    <textarea
-        name="descripcion"
-        rows="5">{{ producto.descripcion }}</textarea>
+            <div class="form-group">
+                <label>Nueva imagen (opcional)</label>
+                <input type="file" name="imagen">
+            </div>
 
-    <label>Categoría</label>
-
-    <select name="categoria">
-
-        {% for categoria in categorias %}
-
-        <option
-            value="{{ categoria.id }}"
-            {% if categoria.id == producto.categoria_id %}
-            selected
-            {% endif %}>
-
-            {{ categoria.nombre }}
-
-        </option>
-
-        {% endfor %}
-
-    </select>
-
-    <p><strong>Imagen actual</strong></p>
-
-    {% if producto.imagen %}
-
-    <img
-        src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}"
-        width="180"
-        style="border-radius:10px; margin-bottom:20px;">
-
-    {% endif %}
-
-    <label>Nueva imagen (opcional)</label>
-
-    <input
-        type="file"
-        name="imagen">
-
-    <br><br>
-
-    <button type="submit">
-        💾 Guardar cambios
-    </button>
-
-    <a href="{{ url_for('main.admin') }}"
-       style="margin-left:20px;">
-        Cancelar
-    </a>
-
-</form>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a href="{{ url_for('main.admin') }}" class="btn btn-ghost">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

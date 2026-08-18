@@ -1,65 +1,33 @@
 {% extends "layout.html" %}
 
-
-{% block titulo %}
-{{ categoria.nombre }} - Marimonia
-{% endblock %}
-
+{% block titulo %}{{ categoria.nombre }} - Marimonia{% endblock %}
 
 {% block contenido %}
 
-
-<h2 class="titulo">
-Marimonia - {{ categoria.nombre }}
-</h2>
-
-
+<div class="editar-header" style="margin-bottom: 32px;">
+    <h2 class="titulo">{{ categoria.nombre }}</h2>
+</div>
 
 <div class="productos">
+    {% for producto in productos %}
+    <div class="card">
+        {% if producto.imagen %}
+        <img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+        {% endif %}
+        <h3>{{ producto.nombre }}</h3>
+        <p>{{ producto.descripcion }}</p>
+    </div>
+    {% endfor %}
 
-
-{% for producto in productos %}
-
-
-<div class="card">
-
-
-{% if producto.imagen %}
-
-<img src="{{ url_for('static', filename='images/productos/' + producto.imagen) }}">
-
-{% endif %}
-
-
-
-<h3>
-{{ producto.nombre }}
-</h3>
-
-
-<p>
-{{ producto.descripcion }}
-</p>
-
-
+    {% if not productos %}
+    <div class="empty-state" style="grid-column: 1 / -1;">
+        <p>No hay productos en esta categoría todavía.</p>
+    </div>
+    {% endif %}
 </div>
 
-
-{% endfor %}
-
-
+<div style="text-align: center;">
+    <a href="/" class="boton-volver">← Volver al inicio</a>
 </div>
-
-
-
-<div style="text-align:center;">
-
-<a href="/" class="boton-volver">
-← Volver al inicio
-</a>
-
-</div>
-
-
 
 {% endblock %}

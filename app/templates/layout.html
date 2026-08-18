@@ -2,61 +2,205 @@
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Marimonia{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+            padding: 0 24px;
+        }
+        .site-header.visible {
+            max-height: 64px;
+            opacity: 1;
+            padding: 10px 24px;
+        }
+        .site-header .header-row {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .site-header .logo-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--color-border);
+            background: white;
+            flex-shrink: 0;
+        }
+        .site-header .logo-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .site-header .header-text span {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+        .site-header .header-text strong {
+            color: var(--color-primary-dark);
+        }
 
-<meta charset="UTF-8">
+        /* INTRO */
+        .intro-full {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            padding: 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .intro-full .intro-logo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: 0 12px 48px rgba(139,94,60,0.2);
+            background: white;
+            flex-shrink: 0;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .intro-full .intro-logo.animate {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .intro-full .intro-logo.move-left {
+            width: 140px;
+            height: 140px;
+            border-width: 6px;
+            transform: translateX(-20px);
+        }
+        .intro-full .intro-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .intro-full .intro-text {
+            max-width: 440px;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .intro-full .intro-text.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .intro-full .intro-text .badge {
+            display: inline-block;
+            padding: 5px 14px;
+            background: rgba(139,94,60,0.08);
+            color: var(--color-primary);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .intro-full .intro-text h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--color-primary-dark);
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .intro-full .intro-text p {
+            font-size: 16px;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+        .scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 2s forwards;
+        }
+        .scroll-hint span {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .scroll-hint .arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid var(--color-primary-light);
+            border-bottom: 2px solid var(--color-primary-light);
+            transform: rotate(45deg);
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate(-50%, 10px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(6px); }
+        }
 
-<title>
-{% block titulo %}
-Marimonia
-{% endblock %}
-</title>
-
-<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+        /* Header siempre visible en páginas que no son home */
+        .site-header.always-visible {
+            max-height: 64px;
+            opacity: 1;
+            padding: 10px 24px;
+        }
+    </style>
 </head>
-
 
 <body>
 
+    <header class="site-header {% if not es_home %}always-visible{% endif %}" id="siteHeader">
+        <div class="header-row">
+            <div class="logo-small">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Marimonia">
+            </div>
+            <div class="header-text">
+                <span><strong>Marimonia</strong> &mdash; Hecho a mano con amor</span>
+            </div>
+        </div>
+    </header>
 
-<header>
+    {% block intro %}{% endblock %}
 
-<img src="{{ url_for('static', filename='images/logo.png') }}"
-     class="logo-header"
-     alt="Marimonia">
+    <div class="contenedor">
+        {% block contenido %}{% endblock %}
+    </div>
 
-<p>
-Hecho a mano
-</p>
+    <footer>
+        <p>&copy; 2026 <strong>Marimonia</strong> &mdash; Hecho a mano con amor</p>
+        <p style="margin-top: 8px; font-size: 11px; opacity: 0.5;">Desarrollado por <strong>Inkv</strong></p>
+    </footer>
 
-</header>
-
-
-<nav>
-
-<a href="/">Inicio</a>
-
-</nav>
-
-
-
-<div class="contenedor">
-
-{% block contenido %}
-
-{% endblock %}
-
-</div>
-
-
-
-<footer>
-
-<p>© Marimonia</p>
-
-</footer>
-
+    {% block scripts %}{% endblock %}
 
 </body>
 

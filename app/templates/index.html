@@ -1,128 +1,107 @@
 {% extends "layout.html" %}
 
+{% block titulo %}Marimonia - Catálogo artesanal{% endblock %}
 
-{% block titulo %}
-Marimonia - Catálogo artesanal
+{% block intro %}
+<section class="intro-full" id="introFull">
+    <div class="intro-logo" id="introLogo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Marimonia">
+    </div>
+    <div class="intro-text" id="introText">
+        <span class="badge">Artesanal</span>
+        <h2>Todo hecho a mano</h2>
+        <p>
+            Piezas únicas creadas con amor y dedicación.
+            Cerámica, velas, sahumerios y objetos decorativos
+            para transformar tus espacios.
+        </p>
+    </div>
+    <div class="scroll-hint">
+        <span>Descubrir</span>
+        <div class="arrow"></div>
+    </div>
+</section>
 {% endblock %}
-
-
 
 {% block contenido %}
 
-
-
-<section class="presentacion">
-
-
-
-    <h2>
-        Todo hecho a mano
-    </h2>
-
-
-    <p>
-        Piezas únicas creadas con amor y dedicación.
-    </p>
-
-
-    <p>
-        Cerámica, velas, sahumerios y objetos decorativos
-        para transformar tus espacios.
-    </p>
-
-
-</section>
-
-
-
-
-<h2 class="titulo">
-Nuestros productos
-</h2>
-
-
+<h2 class="titulo">Nuestros productos</h2>
 
 <div class="categorias">
-
-
-{% for categoria in categorias %}
-
-
-
-<a href="{{ url_for('main.categoria', nombre=categoria.nombre) }}"
-   class="card categoria-card">
-
-
-
-{% if categoria.imagen %}
-
-
-<img src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}"
-     alt="{{ categoria.nombre }}">
-
-
-{% endif %}
-
-
-
-<h3>
-
-{{ categoria.nombre }}
-
-</h3>
-
-
-
-</a>
-
-
-
-{% endfor %}
-
-
-
+    {% for categoria in categorias %}
+    <a href="{{ url_for('main.categoria', nombre=categoria.nombre) }}" class="card categoria-card">
+        {% if categoria.imagen %}
+        <img src="{{ url_for('static', filename='images/categorias/' + categoria.imagen) }}" alt="{{ categoria.nombre }}">
+        {% endif %}
+        <h3>{{ categoria.nombre }}</h3>
+    </a>
+    {% endfor %}
 </div>
 
-
-
-
-
 <section class="redes">
-
-
-<h2>
-Contacto
-</h2>
-
-
-<p>
-📞 Teléfono / WhatsApp
-</p>
-
-
-<a href="tel:+549XXXXXXXXXX">
-
-+54 9 3446 600422
-
-</a>
-
-
-<p>
-📷 Seguinos en Instagram
-</p>
-
-
-<a href="https://www.instagram.com/marimonia.hechoamano"
-   target="_blank">
-
-@marimonia.hechoamano
-
-</a>
-
-
+    <h2>Contacto</h2>
+    <div class="contacto-grid">
+        <div class="contacto-item">
+            <div class="contacto-icon">📞</div>
+            <span class="contacto-label">WhatsApp</span>
+            <a href="https://wa.me/5493446600422" target="_blank">+54 9 3446 600422</a>
+        </div>
+        <div class="contacto-item">
+            <div class="contacto-icon">📷</div>
+            <span class="contacto-label">Instagram</span>
+            <a href="https://www.instagram.com/marimonia.hechoamano" target="_blank">@marimonia.hechoamano</a>
+        </div>
+    </div>
 </section>
 
+{% endblock %}
 
+{% block scripts %}
+<script>
+    const header = document.getElementById('siteHeader');
+    const logo = document.getElementById('introLogo');
+    const text = document.getElementById('introText');
+    const intro = document.getElementById('introFull');
 
+    const yaVisto = sessionStorage.getItem('intro_visto');
 
+    // Si ya vio la intro, ocultarla y mostrar header directo
+    if (yaVisto) {
+        intro.style.display = 'none';
+        header.classList.add('visible');
+    } else {
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                logo.classList.add('animate');
+            }, 300);
+            setTimeout(function() {
+                text.classList.add('show');
+                logo.classList.add('move-left');
+            }, 1400);
+        });
+    }
+
+    // Marcar como visto al scolleajar
+    let headerShown = false;
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > window.innerHeight * 0.8 && !headerShown) {
+            headerShown = true;
+            header.classList.add('visible');
+            sessionStorage.setItem('intro_visto', '1');
+        }
+        if (window.scrollY <= 10 && headerShown && !yaVisto) {
+            headerShown = false;
+            header.classList.remove('visible');
+        }
+    });
+
+    // Si volvés de bfcache, ocultar intro
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+            intro.style.display = 'none';
+            header.classList.add('visible');
+            sessionStorage.setItem('intro_visto', '1');
+        }
+    });
+</script>
 {% endblock %}

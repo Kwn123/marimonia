@@ -35,6 +35,7 @@ def inicio():
     return render_template(
         "index.html",
         categorias=categorias,
+        es_home=True,
     )
 
 # ==========================
