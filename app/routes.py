@@ -349,7 +349,6 @@ def eliminar_categoria(id):
 # ==========================
 
 @main.route("/categoria/<nombre>")
-@login_required
 def categoria(nombre):
 
     categoria = Categoria.query.filter_by(
